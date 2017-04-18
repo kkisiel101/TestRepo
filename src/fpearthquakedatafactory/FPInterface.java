@@ -214,12 +214,54 @@ public class FPInterface extends Application {
     // "All"  
 
     url = "data/4.5_week.xml";
+    String baseURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/";
+    String Mag = "all";
+    String Tim = "day";
     if (useLiveData)
-    {  
+    {
+        switch (quakeTime) {
+            case "Past Week":
+                Tim = "week";
+                break;
+            case "Past Hour":
+                Tim = "hour";
+                break;
+            case "Past Day":
+                Tim = "day";
+                break;
+            case "Past 30 Days":
+                Tim = "month";
+                break;
+            default:
+                break;
+        }
+        switch (quakeMagnitude) {
+            case "Significant":
+                Mag = "significant";
+                break;
+            case "M4.5+":
+                Mag = "4.5";
+                break;
+            case "M2.5+":
+                Mag = "2.5";
+                break;
+            case "M1.0+":
+                Mag = "1.0";
+                break;
+            case "All":
+                Mag = "all";
+                break;
+            default:
+                break;
+        }
+        
       // TODO: compute the URL here
-      url = "";
+      url = baseURL + Mag + "_" + Tim + ".atom";
     }
-    
+    new Thread(()->{
+    ObservableList<EarthquakeData> data = FXCollections.observableArrayList(factory.getEarthquakeData(url));
+    tableView.setItems(data);
+    }).start();
   }
 }
 
